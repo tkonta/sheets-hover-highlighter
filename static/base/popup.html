@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sheets Hover Highlighter</title>
+  <link rel="stylesheet" href="popup.css">
+  <script defer src="popup.js"></script>
+</head>
+<body>
+  <h1>Sheets Hover Highlighter</h1>
+  <label class="master"><input id="enabled" type="checkbox" role="switch" checked disabled> 拡張機能を有効にする</label>
+  <p id="status" role="status">状態を読み込み中…</p>
+  <fieldset id="scope-controls" disabled>
+    <legend>ハイライトの適用範囲</legend>
+    <label for="book">このブック</label>
+    <select id="book">
+      <option value="all-on">全シートでオン</option>
+      <option value="all-off">全シートでオフ</option>
+      <option value="by-sheet">シートごとに設定</option>
+    </select>
+    <label for="sheet">このシート</label>
+    <select id="sheet" aria-describedby="scope-note">
+      <option value="on">オン</option>
+      <option value="off">オフ</option>
+    </select>
+    <small id="scope-note" hidden>シートの設定を保存するには、対象のシートタブを選んで開き直してください。</small>
+  </fieldset>
+  <fieldset id="appearance-controls" disabled>
+    <legend>ハイライトの表示</legend>
+    <label for="mode">強調する範囲</label>
+    <select id="mode">
+      <option value="both">行と列</option>
+      <option value="row">行のみ</option>
+      <option value="col">列のみ</option>
+    </select>
+    <label for="strength">ハイライトの濃さ <output id="strength-value" for="strength">50%</output></label>
+    <input id="strength" type="range" min="10" max="100" step="5" value="50">
+    <label class="checkbox"><input id="headers" type="checkbox" checked> 行番号と列見出しも強調</label>
+  </fieldset>
+  <fieldset id="reset-controls" disabled>
+    <legend>設定の初期化</legend>
+    <button id="reset">すべての設定を初期化</button>
+  </fieldset>
+  <p id="notice" role="status" hidden></p>
+  <dialog id="confirmation" aria-labelledby="confirm-title" aria-describedby="confirm-text">
+    <form method="dialog">
+      <h2 id="confirm-title">すべての設定を初期化しますか？</h2>
+      <p id="confirm-text">ブック・シートごとの設定を削除し、拡張機能と表示の設定を初期値に戻します。</p>
+      <div class="buttons">
+        <button value="cancel" autofocus>キャンセル</button>
+        <button value="apply" class="danger">初期化する</button>
+      </div>
+    </form>
+  </dialog>
+</body>
+</html>

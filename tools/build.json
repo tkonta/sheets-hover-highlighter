@@ -3,6 +3,8 @@
     "chrome": ["chrome131"]
   },
   "entries": {
-    "src/main.ts": "content.js"
+    "src/main.ts": "content.js",
+    "src/popup.ts": "popup.js",
+    "src/background.ts": "background.js"
   }
 }

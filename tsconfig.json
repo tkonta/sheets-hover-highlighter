@@ -8,7 +8,7 @@
     "isolatedModules": true,
     "skipLibCheck": true,
     "lib": ["es2024", "dom", "dom.iterable"],
-    "types": []
+    "types": ["chrome"]
   },
   "include": ["src", "__test__"]
 }

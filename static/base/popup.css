@@ -1,0 +1,69 @@
+:root {
+  color-scheme: light dark;
+  font: 13px system-ui, sans-serif;
+}
+
+body {
+  width: 322px;
+  margin: 12px;
+  color: CanvasText;
+  background: Canvas;
+}
+
+h1, h2 { font-size: 15px; margin: 0; }
+p { margin: 8px 0; }
+
+fieldset {
+  display: grid;
+  gap: 6px;
+  margin: 0 0 9px;
+  padding: 8px;
+  border: 1px solid GrayText;
+  border-radius: 6px;
+}
+
+legend { font-weight: 600; padding: 0 4px; }
+button, select { font: inherit; min-height: 28px; }
+.buttons { display: flex; gap: 6px; }
+.buttons > button { flex: 1; }
+.checkbox { display: flex; align-items: center; gap: 5px; }
+input[type="range"] { margin: 0; width: 100%; }
+output { font-variant-numeric: tabular-nums; }
+small { font-size: 11px; }
+[hidden] { display: none; }
+
+dialog {
+  box-sizing: border-box;
+  width: 305px;
+  border: 1px solid GrayText;
+  border-radius: 8px;
+}
+
+dialog::backdrop { background: rgb(0 0 0 / 35%); }
+.danger { color: white; background: #a12626; border: 1px solid #a12626; border-radius: 4px; }
+
+.master { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+.master input {
+  appearance: none;
+  position: relative;
+  width: 36px;
+  height: 20px;
+  margin: 0;
+  border: 1px solid GrayText;
+  border-radius: 20px;
+  background: #686d75;
+  cursor: pointer;
+}
+.master input:checked { background: #257042; }
+.master input::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: white;
+}
+.master input:checked::before { left: 18px; }
+.master input:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }

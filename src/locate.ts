@@ -2,13 +2,15 @@
 
 import { config } from "./config";
 import { type Bounds, scanBounds } from "./gridline";
-import type { Rect } from "./overlay";
+import type { Highlight, Rect } from "./overlay";
 
 /** グリッドを描いていると思われる、ある程度大きな canvas */
 const gridCanvases = (): HTMLCanvasElement[] =>
   Array.from(document.querySelectorAll("canvas")).filter((c) => {
     const r = c.getBoundingClientRect();
-    return r.width > 150 && r.height > 80;
+    return (
+      r.width > 150 && r.height > 80 && !c.closest(".row-header-wrapper, .column-header-wrapper, .col-header-wrapper")
+    );
   });
 
 const canvasAt = (canvases: HTMLCanvasElement[], x: number, y: number): HTMLCanvasElement | null => {
@@ -72,8 +74,21 @@ const findBounds = (
   return [lo == null ? null : lo + s0, hi == null ? null : hi + s0];
 };
 
+// ヘッダー領域と帯の重なる部分だけを塗る。
+const headerRect = (selector: string, band: Rect, direction: "row" | "col"): Rect | null => {
+  for (const element of document.querySelectorAll(selector)) {
+    const header = element.getBoundingClientRect();
+    const left = direction === "row" ? header.left : Math.max(header.left, band.left);
+    const top = direction === "col" ? header.top : Math.max(header.top, band.top);
+    const right = direction === "row" ? header.right : Math.min(header.right, band.left + band.width);
+    const bottom = direction === "col" ? header.bottom : Math.min(header.bottom, band.top + band.height);
+    if (right > left && bottom > top) return { left, top, width: right - left, height: bottom - top };
+  }
+  return null;
+};
+
 /** ポインタ (CSS px) の下のセルについて、行と列の帯の矩形を返す。グリッド外なら null */
-export const locate = (x: number, y: number): { row: Rect; col: Rect } | null => {
+export const locate = (x: number, y: number): Highlight | null => {
   const canvases = gridCanvases();
   const canvas = canvasAt(canvases, x, y);
   if (!canvas) return null;
@@ -113,8 +128,12 @@ export const locate = (x: number, y: number): { row: Rect; col: Rect } | null =>
     if (h?.[1] != null) rowB = rect.top + h[1] / sy;
   }
 
+  const row = { left: L, top: rowT, width: R - L, height: rowB - rowT };
+  const col = { left: colL, top: T, width: colR - colL, height: B - T };
   return {
-    row: { left: L, top: rowT, width: R - L, height: rowB - rowT },
-    col: { left: colL, top: T, width: colR - colL, height: B - T },
+    row,
+    col,
+    rowHeader: headerRect(".row-header-wrapper", row, "row"),
+    colHeader: headerRect(".column-header-wrapper, .col-header-wrapper", col, "col"),
   };
 };
