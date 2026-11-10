@@ -1,0 +1,33 @@
+{
+  "name": "sheets-hover-highlighter",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Google スプレッドシートで、マウスポインタの下にあるセルの行と列を強調表示する Chrome 拡張機能",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=26"
+  },
+  "scripts": {
+    "build": "npm run build-chrome",
+    "watch": "npm run watch-chrome",
+    "release": "npm run release-chrome",
+    "package": "npm run package-chrome",
+    "lint": "biome check",
+    "format": "biome format --write",
+    "typecheck": "tsc && tsc -p tools",
+    "test": "vitest run",
+    "test-watch": "vitest watch",
+    "build-chrome": "node tools/make_manifest.ts chrome development && node tools/build.ts chrome development",
+    "watch-chrome": "node tools/make_manifest.ts chrome development && node tools/build.ts chrome development watch",
+    "release-chrome": "node tools/make_manifest.ts chrome production && node tools/build.ts chrome production",
+    "package-chrome": "npm run release-chrome && node tools/archive.ts chrome"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.6.6",
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.7",
+    "vitest": "^5.1.0"
+  }
+}

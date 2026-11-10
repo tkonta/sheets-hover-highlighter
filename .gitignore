@@ -1,0 +1,11 @@
+node_modules/
+*.tgz
+.*/
+!.github/
+dist/
+dist-*/
+*.zip
+coverage/
+static/gen/
+static/gen-*/
+.DS_Store

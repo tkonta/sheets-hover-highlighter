@@ -1,0 +1,55 @@
+name: Release Chrome extension
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 26.x
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check tag matches package.json version
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          if [ "v${version}" != "${GITHUB_REF_NAME}" ]; then
+            echo "::error::Tag ${GITHUB_REF_NAME} does not match package.json version v${version}"
+            exit 1
+          fi
+
+      - name: Test
+        run: npm test
+
+      - name: Build and package Chrome extension
+        run: npm run package-chrome
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          asset="$(find . -maxdepth 1 -type f -name 'sheets-hover-highlighter-chrome-*.zip' -print -quit)"
+          test -n "$asset"
+          release_asset="sheets-hover-highlighter-${GITHUB_REF_NAME}-chrome.zip"
+          mv "$asset" "$release_asset"
+          gh release create "$GITHUB_REF_NAME" "$release_asset" \
+            --verify-tag \
+            --title "Sheets Hover Highlighter ${GITHUB_REF_NAME}" \
+            --generate-notes
